@@ -1,8 +1,8 @@
-import { App } from "./app.js";
+import { rout } from "./router.js";
 
 export const DOM = (function () {
   let states = [];
-  let statesIndex = [];
+  let statesIndex = 0;
   function useStates(initiaValue) {
     const currentIndex = statesIndex;
     states[currentIndex] =
@@ -11,11 +11,12 @@ export const DOM = (function () {
       states[currentIndex] = newValue;
       render();
     }
+    statesIndex++;
     return [states[currentIndex], setSatates];
   }
 
   let effect = [];
-  let effectIndex = [];
+  let effectIndex = 0;
   function UseEffect(callBack, defpen) {
     const oldDepn = effect[effectIndex];
     let hasCahnged = true;
@@ -29,11 +30,11 @@ export const DOM = (function () {
     effectIndex++;
   }
 
-  function Jsx(tag, props = {}, ...childers) {
+  function Jsx(tag, props, ...childeren) {
     if (typeof tag === "function") {
-      return { ...props, childers };
+      return tag({ ...props, childeren });
     }
-    return { tag, props, childers };
+    return { tag, props: props || {}, childeren };
   }
 
   function CreateElement(node) {
@@ -45,7 +46,7 @@ export const DOM = (function () {
       element = document.createElement("a");
       element.addEventListener("click", (e) => {
         e.preventDefault();
-        history.pushState("", null, e.target.href);
+        history.pushState("", null, element.href);
         render();
       });
     } else {
@@ -62,7 +63,7 @@ export const DOM = (function () {
         element.setAttribute(name, value);
       }
     }
-    for (let child of node.childers.flat()) {
+    for (let child of node.childeren.flat()) {
       if (typeof child === "string" || typeof child === "number") {
         element.append(document.createTextNode(String(child)));
       } else {
@@ -75,10 +76,19 @@ export const DOM = (function () {
   function render() {
     statesIndex = 0;
     effectIndex = 0;
+    function getPath() {
+      return document.location.pathname;
+    }
+    const func = rout[getPath()];
+    console.log(func);
+
     const root = document.querySelector("#root");
     root.innerHTML = "";
-    const app = App;
-    root.append(CreateElement(app()));
+    if (func === undefined) {
+      return;
+    }
+    // const app = App;
+    root.append(CreateElement(func()));
   }
 
   return { useStates, UseEffect, render, Jsx, CreateElement };

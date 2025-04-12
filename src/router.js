@@ -1,30 +1,22 @@
+import { DOM } from "./dom.js";
+
+export const rout = {};
+
 export class Router {
   constructor() {
-    this.rout = {};
     this.document = document;
-  }
-  render() {
-    const path = this.getPath();
-    const func = this.rout[path];
-    if (!func) {
-      return;
-    }
-    func();
-  }
-  getPath() {
-    return this.document.location.pathname;
   }
   init() {
     this.document.addEventListener("popstate", () => {
-      this.render();
+      DOM.render();
     });
-    this.render();
+    DOM.render();
   }
   defined(path, func) {
-    const func = this.rout[path];
-    if (func) {
+    const fun = rout[path];
+    if (fun) {
       throw new Error("path arleady used");
     }
-    this.rout[path] = func;
+    rout[path] = func;
   }
 }
