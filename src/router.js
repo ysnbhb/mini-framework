@@ -20,3 +20,15 @@ export class Router {
     rout[path] = func;
   }
 }
+
+const Navigate = function () {
+  function push(url) {
+    history.pushState("", null, url);
+    DOM.render();
+  }
+
+  function replace(url) {
+    history.replaceState("", null, url);
+    DOM.render();
+  }
+};

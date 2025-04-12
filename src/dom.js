@@ -1,3 +1,4 @@
+import NotFound from "./notFound.js";
 import { rout } from "./router.js";
 
 export const DOM = (function () {
@@ -85,9 +86,9 @@ export const DOM = (function () {
     const root = document.querySelector("#root");
     root.innerHTML = "";
     if (func === undefined) {
+      root.append(CreateElement(NotFound()));
       return;
     }
-    // const app = App;
     root.append(CreateElement(func()));
   }
 
