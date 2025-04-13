@@ -39,6 +39,9 @@ export const DOM = (function () {
   }
 
   function CreateElement(node) {
+    if (node === undefined || !node) {
+      return document.createTextNode("")
+    }
     if (typeof node === "string" || typeof node === "number") {
       return document.createTextNode(String(node));
     }
@@ -60,9 +63,12 @@ export const DOM = (function () {
         element.className = value;
       } else if (name === "id") {
         element.id = value;
-      } else {
+      }else if  (name === "__htmldanger") {
+          element.innerHTML = value
+      }else {
         element.setAttribute(name, value);
       }
+      
     }
     for (let child of node.childeren.flat()) {
       if (typeof child === "string" || typeof child === "number") {

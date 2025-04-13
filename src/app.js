@@ -1,40 +1,66 @@
 import { DOM } from "./dom.js";
 import { Router } from "./router.js";
 
-function Count({ start }) {
-  const [count, setCount] = DOM.useStates(start);
+const arrs = [
+  {
+    tag: "h1",
+    className: "good",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+  {
+    tag: "h1",
+    className: "good",
+    text: "hh",
+  },
+];
+
+function Data() {
   return DOM.Jsx(
-    "p",
-    {
-      onclick: () => {
-        setCount(count +1);
-      },
-    },
-    count
+    "div",
+    { className: "good" },
+    arrs.map((data, i) => {
+      return DOM.Jsx(
+        "h1",
+        { className: data.tag },
+        data.text
+      );
+    })
   );
 }
-
-export function App() {
-  const [text, setText] = DOM.useStates("js");
-  return DOM.Jsx(
-    "h1",
-    { className: "doo" },
-    "doo",
-    DOM.Jsx("p", {}, text),
-    DOM.Jsx(
-      "button",
-      {
-        onClick: (e) => {
-          setText("jjjjf");
-        },
-      },
-      "click her"
-    ),
-    DOM.Jsx("Link", { href: "/lo" }, "click here "),
-    DOM.Jsx(Count, { start: 0 })
-  );
-}
-
 const router = new Router();
-router.defined("/", App);
+router.defined("/", Data);
 router.init();
