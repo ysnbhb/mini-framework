@@ -81,15 +81,12 @@ export const DOM = (function () {
       return document.location.pathname;
     }
     const func = rout[getPath()];
-    console.log(func);
-
     const root = document.querySelector("#root");
-    root.innerHTML = "";
     if (func === undefined) {
-      root.append(CreateElement(NotFound()));
+      root.replaceChildren(CreateElement(NotFound()));
       return;
     }
-    root.append(CreateElement(func()));
+    root.replaceChildren(CreateElement(func()));
   }
 
   return { useStates, UseEffect, render, Jsx, CreateElement };

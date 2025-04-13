@@ -1,0 +1,15 @@
+{
+  "name": "mini-framework",
+  "version": "1.0.0",
+  "description": "this for mini project ",
+  "main": "index.js",
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "mini-framwork"
+  },
+  "author": "yassine bhb",
+  "license": "ISC"
+}

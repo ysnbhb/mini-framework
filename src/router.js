@@ -3,11 +3,9 @@ import { DOM } from "./dom.js";
 export const rout = {};
 
 export class Router {
-  constructor() {
-    this.document = document;
-  }
+  constructor() {}
   init() {
-    this.document.addEventListener("popstate", () => {
+    window.addEventListener("popstate", () => {
       DOM.render();
     });
     DOM.render();
@@ -31,4 +29,5 @@ const Navigate = function () {
     history.replaceState("", null, url);
     DOM.render();
   }
+  return { push, replace };
 };
