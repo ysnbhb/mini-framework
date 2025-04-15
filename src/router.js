@@ -1,17 +1,14 @@
 import { DOM } from "./dom.js";
 
-
 export class Router {
   constructor() {
     this.routes = {};
   }
   init() {
-    window.addEventListener("popstate", () => {
+    window.onpopstate = () => {
       DOM.render();
-    });
-    document.addEventListener("DOMContentLoaded" , ()=> {
-      DOM.render(); 
-    })
+    };
+    DOM.render();
   }
   defined(path, func, styles) {
     const existing = this.routes[path];
@@ -20,9 +17,8 @@ export class Router {
     }
     this.routes[path] = {
       func,
-      styles 
+      styles,
     };
-   
   }
 }
 
@@ -53,6 +49,4 @@ export const Navigate = function () {
   return { push, replace, go, back, forward, reload };
 };
 
-
 export const router = new Router();
-router.init();
