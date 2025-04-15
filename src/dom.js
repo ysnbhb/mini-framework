@@ -6,7 +6,6 @@ export const DOM = (function () {
   let statesIndex = 0;
   function useStates(initialValue) {
     const currentIndex = statesIndex;
-    console.log("useStates index", currentIndex);
     states[currentIndex] =
       states[currentIndex] !== undefined ? states[currentIndex] : initialValue;
 
@@ -68,7 +67,7 @@ export const DOM = (function () {
     for (let [name, value] of Object.entries(node.props)) {
       if (name.startsWith("on") && typeof value === "function") {
         const eventName = name.slice(2).toLowerCase();
-        element[`on${eventName}`] = value;        
+        element[`on${eventName}`] = value;
       } else if (name === "className") {
         element.className = value;
       } else if (name === "id") {
@@ -106,7 +105,7 @@ export const DOM = (function () {
     return element;
   }
 
-  let currentStyles = []; 
+  let currentStyles = [];
 
   function render() {
     console.log("Rendering...");
@@ -117,9 +116,13 @@ export const DOM = (function () {
     const getPath = () => document.location.pathname;
     const rout = router.routes[getPath()];
     const root = document.querySelector("#root");
+    console.log(rout, "current style", currentStyles);
 
     if (rout === undefined) {
-      replacestyle(["./style/notFound.css"]);
+      if (currentStyles != ["./style/notFound.css"]) {
+        replacestyle(["./style/notFound.css"]);
+      }
+      currentStyles = ["./style/notFound.css"];
       root.replaceChildren(CreateElement(NotFound()));
       return;
     }
