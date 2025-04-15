@@ -67,7 +67,8 @@ export const DOM = (function () {
 
     for (let [name, value] of Object.entries(node.props)) {
       if (name.startsWith("on") && typeof value === "function") {
-        element.addEventListener(name.slice(2).toLowerCase(), value);
+        const eventName = name.slice(2).toLowerCase();
+        element[`on${eventName}`] = value;        
       } else if (name === "className") {
         element.className = value;
       } else if (name === "id") {
@@ -75,7 +76,6 @@ export const DOM = (function () {
       } else if (name === "__htmldanger") {
         element.innerHTML = value;
       } else {
-        // ✅ Proper DOM property assignment
         if (typeof value === "boolean") {
           if (value) {
             element.setAttribute(name, "");
