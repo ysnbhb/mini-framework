@@ -1,5 +1,5 @@
 import NotFound from "./notFound.js";
-import { rout } from "./router.js";
+import { router } from "./router.js";
 
 export const DOM = (function () {
   let states = [];
@@ -40,7 +40,7 @@ export const DOM = (function () {
 
   function CreateElement(node) {
     if (node === undefined || !node) {
-      return document.createTextNode("")
+      return document.createTextNode("");
     }
     if (typeof node === "string" || typeof node === "number") {
       return document.createTextNode(String(node));
@@ -63,12 +63,11 @@ export const DOM = (function () {
         element.className = value;
       } else if (name === "id") {
         element.id = value;
-      }else if  (name === "__htmldanger") {
-          element.innerHTML = value
-      }else {
+      } else if (name === "__htmldanger") {
+        element.innerHTML = value;
+      } else {
         element.setAttribute(name, value);
       }
-      
     }
     for (let child of node.childeren.flat()) {
       if (typeof child === "string" || typeof child === "number") {
@@ -86,8 +85,10 @@ export const DOM = (function () {
     function getPath() {
       return document.location.pathname;
     }
-    const func = rout[getPath()];
+    const func = router.routes[getPath()].func;
     const root = document.querySelector("#root");
+    const style = router.routes[getPath()].style;
+    replacestyle(style);
     if (func === undefined) {
       root.replaceChildren(CreateElement(NotFound()));
       return;
@@ -95,5 +96,15 @@ export const DOM = (function () {
     root.replaceChildren(CreateElement(func()));
   }
 
+  function replacestyle(styles = []) {
+    const links = document.querySelectorAll("link[rel='stylesheet']");
+    links.forEach((link) => link.remove());
+    for (let href of styles) {
+      const link = document.createElement("link");
+      link.setAttribute("rel", "stylesheet");
+      link.setAttribute("href", href);
+      document.head.appendChild(link);
+    }
+  }
   return { useStates, UseEffect, render, Jsx, CreateElement };
 })();

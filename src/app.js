@@ -1,5 +1,5 @@
 import { DOM } from "./dom.js";
-import { Router } from "./router.js";
+import { router } from "./router.js";
 
 const arrs = [
   {
@@ -61,6 +61,6 @@ function Data() {
     })
   );
 }
-const router = new Router();
-router.defined("/", Data);
-router.init();
+
+router.defined("/", Data );
+
