@@ -7,6 +7,7 @@ export default function NotFound() {
     DOM.Jsx(
       "div",
       { className: "error-content" },
+      DOM.Jsx("h1", {}, "404"),
       DOM.Jsx("p", {}, "Oops! The page you are looking for does not exist"),
       DOM.Jsx("Link", { href: "/" }, "Go to Homepage")
     )

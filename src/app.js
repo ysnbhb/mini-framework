@@ -54,13 +54,12 @@ function Data() {
     { className: "good" },
     arrs.map((data, i) => {
       return DOM.Jsx(
-        "h1",
-        { className: data.tag },
+        "Link",
+        { className: data.className, href: "/good" },
         data.text
       );
     })
   );
 }
 
-router.defined("/", Data );
-
+router.defined("/", Data);

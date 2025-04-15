@@ -1,5 +1,5 @@
 import NotFound from "./notFound.js";
-import { router } from "./router.js";
+import { Navigate, router } from "./router.js";
 
 export const DOM = (function () {
   let states = [];
@@ -50,8 +50,8 @@ export const DOM = (function () {
       element = document.createElement("a");
       element.addEventListener("click", (e) => {
         e.preventDefault();
-        history.pushState("", null, element.href);
-        render();
+       const rout = Navigate();
+       rout.push(element.href);
       });
     } else {
       element = document.createElement(node.tag);
@@ -85,15 +85,20 @@ export const DOM = (function () {
     function getPath() {
       return document.location.pathname;
     }
-    const func = router.routes[getPath()].func;
+    const rout = router.routes[getPath()];
     const root = document.querySelector("#root");
-    const style = router.routes[getPath()].style;
-    replacestyle(style);
-    if (func === undefined) {
+    console.log(rout);
+        
+    if (rout === undefined) {
+    replacestyle(["./style/notFound.css"]);
+
       root.replaceChildren(CreateElement(NotFound()));
+
       return;
     }
-    root.replaceChildren(CreateElement(func()));
+    replacestyle(rout.styles);
+
+    root.replaceChildren(CreateElement(rout.func()));
   }
 
   function replacestyle(styles = []) {
