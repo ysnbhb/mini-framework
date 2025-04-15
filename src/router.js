@@ -13,14 +13,14 @@ export class Router {
       DOM.render();
     })
   }
-  defined(path, func , style) {
-    const fun = this.routes[path];
-    if (fun) {
-      throw new Error("path arleady used");
+  defined(path, func, styles) {
+    const existing = this.routes[path];
+    if (existing) {
+      throw new Error("path already used");
     }
-    this.routes[path] ={
+    this.routes[path] = {
       func,
-      style
+      styles 
     };
    
   }
