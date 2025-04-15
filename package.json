@@ -1,15 +1,14 @@
 {
   "name": "mini-framework",
   "version": "1.0.0",
-  "description": "this for mini project ",
-  "main": "index.js",
+  "description": "mini framwork project",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "start"
+    "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "mini-framwork"
-  },
-  "author": "yassine bhb",
+  "author": [
+    "yassine bahbib"
+  ],
   "license": "ISC"
 }
