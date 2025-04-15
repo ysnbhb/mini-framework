@@ -9,7 +9,12 @@ export const DOM = (function () {
     states[currentIndex] =
       states[currentIndex] !== undefined ? states[currentIndex] : initiaValue;
     function setSatates(newValue) {
-      states[currentIndex] = newValue;
+      if (typeof newValue === "function") {
+        states[currentIndex] = newValue(states[currentIndex]);
+      }else {
+        states[currentIndex] = newValue;
+
+      }
       render();
     }
     statesIndex++;

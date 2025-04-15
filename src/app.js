@@ -49,14 +49,35 @@ const arrs = [
 ];
 
 function Data() {
+  const [count, setCount] = DOM.useStates(0);
   return DOM.Jsx(
     "div",
-    { className: "good" },
-    arrs.map((data, i) => {
+    {
+      className: "container",
+    },
+    DOM.Jsx(
+      "button",
+      {
+        onClick: () => {
+          setCount(count + 1);
+        },
+      },
+      "click me"
+    ),
+    DOM.Jsx(
+      "h1",
+      {
+        className: "good",
+      },
+      count
+    ),
+    ...arrs.map((item) => {
       return DOM.Jsx(
-        "Link",
-        { className: data.className, href: "/good" },
-        data.text
+        item.tag,
+        {
+          className: item.className,
+        },
+        item.text
       );
     })
   );
