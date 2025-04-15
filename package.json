@@ -1,14 +1,16 @@
 {
   "name": "mini-framework",
   "version": "1.0.0",
-  "description": "mini framwork project",
+  "description": "mini framework project",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "author": [
-    "yassine bahbib"
+    "yassine bahbib" , 
+    "Mohamed Bakhouch" ,
+    "abdelouahab khir"
   ],
   "license": "ISC"
 }
