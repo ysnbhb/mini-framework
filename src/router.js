@@ -10,7 +10,7 @@ export class Router {
       DOM.render();
     });
     document.addEventListener("DOMContentLoaded" , ()=> {
-      DOM.render();
+      DOM.render(); 
     })
   }
   defined(path, func, styles) {
