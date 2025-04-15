@@ -91,9 +91,7 @@ export const DOM = (function () {
       return document.location.pathname;
     }
     const rout = router.routes[getPath()];
-    const root = document.querySelector("#root");
-    console.log(rout);
-        
+    const root = document.querySelector("#root");        
     if (rout === undefined) {
     replacestyle(["./style/notFound.css"]);
 
