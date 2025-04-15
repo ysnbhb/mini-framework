@@ -76,21 +76,7 @@ export const DOM = (function () {
       } else if (name === "__htmldanger") {
         element.innerHTML = value;
       } else {
-        if (typeof value === "boolean") {
-          if (value) {
-            element.setAttribute(name, "");
-            element[name] = true;
-          } else {
-            element.removeAttribute(name);
-            element[name] = false;
-          }
-        } else {
-          if (name in element) {
-            element[name] = value;
-          } else {
-            element.setAttribute(name, value);
-          }
-        }
+        element.setAttribute(name, value);
       }
     }
 
