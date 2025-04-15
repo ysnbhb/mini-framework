@@ -4,21 +4,23 @@ import { Navigate, router } from "./router.js";
 export const DOM = (function () {
   let states = [];
   let statesIndex = 0;
-  function useStates(initiaValue) {
+  function useStates(initialValue) {
     const currentIndex = statesIndex;
+    console.log("useStates index", currentIndex);
     states[currentIndex] =
-      states[currentIndex] !== undefined ? states[currentIndex] : initiaValue;
-    function setSatates(newValue) {
+      states[currentIndex] !== undefined ? states[currentIndex] : initialValue;
+
+    function setStates(newValue) {
       if (typeof newValue === "function") {
         states[currentIndex] = newValue(states[currentIndex]);
-      }else {
+      } else {
         states[currentIndex] = newValue;
-
       }
-      render();
+      DOM.render();
     }
+
     statesIndex++;
-    return [states[currentIndex], setSatates];
+    return [states[currentIndex], setStates];
   }
 
   let effect = [];
@@ -50,20 +52,22 @@ export const DOM = (function () {
     if (typeof node === "string" || typeof node === "number") {
       return document.createTextNode(String(node));
     }
+
     let element;
     if (node.tag === "Link") {
       element = document.createElement("a");
       element.addEventListener("click", (e) => {
         e.preventDefault();
-       const rout = Navigate();
-       rout.push(element.href);
+        const rout = Navigate();
+        rout.push(element.href);
       });
     } else {
       element = document.createElement(node.tag);
     }
+
     for (let [name, value] of Object.entries(node.props)) {
       if (name.startsWith("on") && typeof value === "function") {
-        element.addEventListener(name.slice(2).toLocaleLowerCase(), value);
+        element.addEventListener(name.slice(2).toLowerCase(), value);
       } else if (name === "className") {
         element.className = value;
       } else if (name === "id") {
@@ -71,9 +75,25 @@ export const DOM = (function () {
       } else if (name === "__htmldanger") {
         element.innerHTML = value;
       } else {
-        element.setAttribute(name, value);
+        // ✅ Proper DOM property assignment
+        if (typeof value === "boolean") {
+          if (value) {
+            element.setAttribute(name, "");
+            element[name] = true;
+          } else {
+            element.removeAttribute(name);
+            element[name] = false;
+          }
+        } else {
+          if (name in element) {
+            element[name] = value;
+          } else {
+            element.setAttribute(name, value);
+          }
+        }
       }
     }
+
     for (let child of node.childeren.flat()) {
       if (typeof child === "string" || typeof child === "number") {
         element.append(document.createTextNode(String(child)));
@@ -81,32 +101,42 @@ export const DOM = (function () {
         element.append(CreateElement(child));
       }
     }
+
     return element;
   }
 
+  let currentStyles = []; 
+
   function render() {
+    console.log("Rendering...");
+
     statesIndex = 0;
     effectIndex = 0;
-    function getPath() {
-      return document.location.pathname;
-    }
+
+    const getPath = () => document.location.pathname;
     const rout = router.routes[getPath()];
-    const root = document.querySelector("#root");        
+    const root = document.querySelector("#root");
+
     if (rout === undefined) {
-    replacestyle(["./style/notFound.css"]);
-
+      replacestyle(["./style/notFound.css"]);
       root.replaceChildren(CreateElement(NotFound()));
-
       return;
     }
-    replacestyle(rout.styles);
+
+    if (rout.styles !== currentStyles) {
+      replacestyle(rout.styles);
+      currentStyles = rout.styles;
+    }
 
     root.replaceChildren(CreateElement(rout.func()));
   }
 
   function replacestyle(styles = []) {
+    console.log("Applying styles:", styles);
+
     const links = document.querySelectorAll("link[rel='stylesheet']");
     links.forEach((link) => link.remove());
+
     for (let href of styles) {
       const link = document.createElement("link");
       link.setAttribute("rel", "stylesheet");
@@ -114,5 +144,6 @@ export const DOM = (function () {
       document.head.appendChild(link);
     }
   }
+
   return { useStates, UseEffect, render, Jsx, CreateElement };
 })();
