@@ -1,7 +1,6 @@
 import { DOM } from "./dom.js";
 
-let todoList = [
-]
+let todoList = [];
 
 export function TodoApp() {
   const [todos, setTodos] = DOM.useStates([]);
@@ -154,8 +153,9 @@ export function TodoApp() {
       DOM.Jsx(
         "button",
         {
-          className: `clear-completed ${filter === "completed" ? "visible" : "hidden"
-            }`,
+          className: `clear-completed ${
+            filter === "completed" ? "visible" : "hidden"
+          }`,
           onClick: clearCompleted,
         },
         "Clear Completed"
@@ -165,36 +165,40 @@ export function TodoApp() {
 }
 
 const SetNewTodoList = (text, done, id = new Date()) => {
-  todoList.push({ text, done, id: id.getTime() })
-  DOM.render()
-}
+  todoList.push({ text, done, id: id.getTime() });
+  DOM.render();
+};
 
 const RemoveToList = (id) => {
-  todoList = todoList.filter((todo) => todo.id != id)
-  DOM.render()
-}
-
+  todoList = todoList.filter((todo) => todo.id != id);
+  DOM.render();
+};
 
 const AddToCommple = (id) => {
   todoList = todoList.map((todo) => {
     if (todo.id === id) {
-
       return {
         text: todo.text,
         done: !todo.done,
-        id: todo.id
-      }
+        id: todo.id,
+      };
     }
-    return todo
-  })
-  DOM.render()
-}
+    return todo;
+  });
+  DOM.render();
+};
 
 export function TodoApp2() {
-  return DOM.Jsx("section", { className: "todoapp", id: "root" },
-    DOM.Jsx("header", { className: "header", "data-testid": "header" },
+  return DOM.Jsx(
+    "section",
+    { className: "todoapp", id: "root" },
+    DOM.Jsx(
+      "header",
+      { className: "header", "data-testid": "header" },
       DOM.Jsx("h1", {}, "todos"),
-      DOM.Jsx("div", { className: "input-container" },
+      DOM.Jsx(
+        "div",
+        { className: "input-container" },
         DOM.Jsx("input", {
           className: "new-todo",
           id: "todo-input",
@@ -205,76 +209,145 @@ export function TodoApp2() {
             console.log(document.getElementById("todo-input").value);
 
             if (e.code === "Enter") {
-              SetNewTodoList(e.target.value, false)
+              SetNewTodoList(e.target.value, false);
             }
-          }
+          },
         }),
-        DOM.Jsx("label", {
-          className: "visually-hidden",
-          for: "todo-input"
-        }, "New Todo Input")
+        DOM.Jsx(
+          "label",
+          {
+            className: "visually-hidden",
+            for: "todo-input",
+          },
+          "New Todo Input"
+        )
       )
     ),
 
-    DOM.Jsx("main", { className: "main", "data-testid": "main" },
-      DOM.Jsx("div", { className: "toggle-all-container" },
-        todoList.length > 0 ? DOM.Jsx("input", {
-          className: "toggle-all",
-          type: "checkbox",
-          id: "toggle-all",
-          "data-testid": "toggle-all"
-        }) : "",
-        todoList.length > 0 ? DOM.Jsx("label", {
-          className: "toggle-all-label",
-          for: "toggle-all"
-        }, "Toggle All Input") : ""
+    DOM.Jsx(
+      "main",
+      { className: "main", "data-testid": "main" },
+      DOM.Jsx(
+        "div",
+        { className: "toggle-all-container" },
+        todoList.length > 0
+          ? DOM.Jsx("input", {
+              className: "toggle-all",
+              type: "checkbox",
+              id: "toggle-all",
+              "data-testid": "toggle-all",
+            })
+          : "",
+        todoList.length > 0
+          ? DOM.Jsx(
+              "label",
+              {
+                className: "toggle-all-label",
+                for: "toggle-all",
+              },
+              "Toggle All Input"
+            )
+          : ""
       ),
 
-      todoList.length > 0 ? DOM.Jsx("ul", { className: "todo-list", "data-testid": "todo-list" },
-        ...todoList.map((todo) => {
-          return DOM.Jsx("li", { className: "", "data-testid": "todo-item" },
-            DOM.Jsx("div", { className: "view" },
-              DOM.Jsx("input", {
-                className: "toggle",
-                type: "checkbox",
-                "data-testid": "todo-item-toggle",
-                onclick: () => {
-                  AddToCommple(todo.id)
-                }
-              }),
-              DOM.Jsx("label", { "data-testid": "todo-item-label" }, todo.text),
-              DOM.Jsx("button", {
-                className: "destroy", "data-testid": "todo-item-button", onclick: () => {
-                  RemoveToList(todo.id)
-                }
-              })
-            )
-          );
-        })
-      ) : ""
+      todoList.length > 0
+        ? DOM.Jsx(
+            "ul",
+            { className: "todo-list", "data-testid": "todo-list" },
+            ...todoList.map((todo) => {
+              return DOM.Jsx(
+                "li",
+                {
+                  className: todo.done ? "completed" : "",
+                  "data-testid": "todo-item",
+                },
+                DOM.Jsx(
+                  "div",
+                  { className: "view" },
+                  DOM.Jsx("input", {
+                    className: "toggle",
+                    type: "checkbox",
+                    "data-testid": "todo-item-toggle",
+                    checked: todo.done,
+                    onclick: () => {
+                      AddToCommple(todo.id);
+                    },
+                  }),
+                  DOM.Jsx(
+                    "label",
+                    { "data-testid": "todo-item-label" },
+                    todo.text
+                  ),
+                  DOM.Jsx("button", {
+                    className: "destroy",
+                    "data-testid": "todo-item-button",
+                    onclick: () => {
+                      RemoveToList(todo.id);
+                    },
+                  })
+                )
+              );
+            })
+          )
+        : ""
     ),
 
-    todoList.length > 0 ? DOM.Jsx("footer", { className: "footer", "data-testid": "footer" },
-      DOM.Jsx("span", { className: "todo-count" }, `${todoList.length} item(s) left!`),
-      DOM.Jsx("ul", { className: "filters", "data-testid": "footer-navigation" },
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "selected", href: "/" }, "All")),
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "", href: "/active" }, "Active")),
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "", href: "/completed" }, "Completed"))
-      ),
-      DOM.Jsx("button", { className: "clear-completed", disabled: true }, "Clear completed")
-    ) : ""
+    todoList.length > 0
+      ? DOM.Jsx(
+          "footer",
+          { className: "footer", "data-testid": "footer" },
+          DOM.Jsx(
+            "span",
+            { className: "todo-count" },
+            `${todoList.length} item(s) left!`
+          ),
+          DOM.Jsx(
+            "ul",
+            { className: "filters", "data-testid": "footer-navigation" },
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx("Link", { className: "selected", href: "/" }, "All")
+            ),
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx("Link", { className: "", href: "/active" }, "Active")
+            ),
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx(
+                "Link",
+                { className: "", href: "/completed" },
+                "Completed"
+              )
+            )
+          ),
+          DOM.Jsx(
+            "button",
+            { className: "clear-completed", disabled: true },
+            "Clear completed"
+          )
+        )
+      : ""
   );
 }
-
 
 export function Active() {
   const filteredTodos = todoList.filter((todo) => {
     return !todo.done;
   });
-  return DOM.Jsx("section", { className: "todoapp", id: "root" },
-    DOM.Jsx("header", { className: "header", "data-testid": "header" },
+  return DOM.Jsx(
+    "section",
+    { className: "todoapp", id: "root" },
+    DOM.Jsx(
+      "header",
+      { className: "header", "data-testid": "header" },
       DOM.Jsx("h1", {}, "todos"),
-      DOM.Jsx("div", { className: "input-container" },
+      DOM.Jsx(
+        "div",
+        { className: "input-container" },
         DOM.Jsx("input", {
           className: "new-todo",
           id: "todo-input",
@@ -285,77 +358,146 @@ export function Active() {
             console.log(document.getElementById("todo-input").value);
 
             if (e.code === "Enter") {
-              SetNewTodoList(e.target.value, false)
+              SetNewTodoList(e.target.value, false);
             }
-          }
+          },
         }),
-        DOM.Jsx("label", {
-          className: "visually-hidden",
-          for: "todo-input"
-        }, "New Todo Input")
+        DOM.Jsx(
+          "label",
+          {
+            className: "visually-hidden",
+            for: "todo-input",
+          },
+          "New Todo Input"
+        )
       )
     ),
 
-    DOM.Jsx("main", { className: "main", "data-testid": "main" },
-      DOM.Jsx("div", { className: "toggle-all-container" },
-        todoList.length > 0 ? DOM.Jsx("input", {
-          className: "toggle-all",
-          type: "checkbox",
-          id: "toggle-all",
-          "data-testid": "toggle-all"
-        }) : "",
-        todoList.length > 0 ? DOM.Jsx("label", {
-          className: "toggle-all-label",
-          for: "toggle-all"
-        }, "Toggle All Input") : ""
+    DOM.Jsx(
+      "main",
+      { className: "main", "data-testid": "main" },
+      DOM.Jsx(
+        "div",
+        { className: "toggle-all-container" },
+        todoList.length > 0
+          ? DOM.Jsx("input", {
+              className: "toggle-all",
+              type: "checkbox",
+              id: "toggle-all",
+              "data-testid": "toggle-all",
+            })
+          : "",
+        todoList.length > 0
+          ? DOM.Jsx(
+              "label",
+              {
+                className: "toggle-all-label",
+                for: "toggle-all",
+              },
+              "Toggle All Input"
+            )
+          : ""
       ),
 
-      todoList.length > 0 ? DOM.Jsx("ul", { className: "todo-list", "data-testid": "todo-list" },
-        ...filteredTodos.map((todo, index) => {
-          return DOM.Jsx("li", { className: "", "data-testid": "todo-item" },
-            DOM.Jsx("div", { className: "view" },
-              DOM.Jsx("input", {
-                className: "toggle",
-                type: "checkbox",
-                "data-testid": "todo-item-toggle",
-                onclick: () => {
-                  AddToCommple(todo.id)
-                }
-              }),
-              DOM.Jsx("label", { "data-testid": "todo-item-label" }, todo.text),
-              DOM.Jsx("button", {
-                className: "destroy", "data-testid": "todo-item-button", onclick: () => {
-                  RemoveToList(todo.id)
-                }
-              })
-            )
-          );
-        })
-      ) : ""
+      todoList.length > 0
+        ? DOM.Jsx(
+            "ul",
+            { className: "todo-list", "data-testid": "todo-list" },
+            ...filteredTodos.map((todo, index) => {
+              return DOM.Jsx(
+                "li",
+                {
+                  className: todo.done ? "completed" : "",
+                  "data-testid": "todo-item",
+                },
+
+                DOM.Jsx(
+                  "div",
+                  { className: "view" },
+                  DOM.Jsx("input", {
+                    className: "toggle",
+                    type: "checkbox",
+                    "data-testid": "todo-item-toggle",
+                    checked: todo.done,
+                    onclick: () => {
+                      AddToCommple(todo.id);
+                    },
+                  }),
+                  DOM.Jsx(
+                    "label",
+                    { "data-testid": "todo-item-label" },
+                    todo.text
+                  ),
+                  DOM.Jsx("button", {
+                    className: "destroy",
+                    "data-testid": "todo-item-button",
+                    onclick: () => {
+                      RemoveToList(todo.id);
+                    },
+                  })
+                )
+              );
+            })
+          )
+        : ""
     ),
 
-    todoList.length > 0 ? DOM.Jsx("footer", { className: "footer", "data-testid": "footer" },
-      DOM.Jsx("span", { className: "todo-count" }, `${todoList.length} item(s) left!`),
-      DOM.Jsx("ul", { className: "filters", "data-testid": "footer-navigation" },
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "selected", href: "/" }, "All")),
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "", href: "/active" }, "Active")),
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "", href: "/completed" }, "Completed"))
-      ),
-      DOM.Jsx("button", { className: "clear-completed", disabled: true }, "Clear completed")
-    ) : ""
+    todoList.length > 0
+      ? DOM.Jsx(
+          "footer",
+          { className: "footer", "data-testid": "footer" },
+          DOM.Jsx(
+            "span",
+            { className: "todo-count" },
+            `${todoList.length} item(s) left!`
+          ),
+          DOM.Jsx(
+            "ul",
+            { className: "filters", "data-testid": "footer-navigation" },
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx("Link", { className: "selected", href: "/" }, "All")
+            ),
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx("Link", { className: "", href: "/active" }, "Active")
+            ),
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx(
+                "Link",
+                { className: "", href: "/completed" },
+                "Completed"
+              )
+            )
+          ),
+          DOM.Jsx(
+            "button",
+            { className: "clear-completed", disabled: true },
+            "Clear completed"
+          )
+        )
+      : ""
   );
 }
-
-
 
 export function Completed() {
   const filteredTodos = todoList.filter((todo) => {
     return todo.done;
   });
-  return DOM.Jsx("section", { className: "todoapp", id: "root" },
-    DOM.Jsx("header", { className: "header", "data-testid": "header" },
+  return DOM.Jsx(
+    "section",
+    { className: "todoapp", id: "root" },
+    DOM.Jsx(
+      "header",
+      { className: "header", "data-testid": "header" },
       DOM.Jsx("h1", {}, "todos"),
-      DOM.Jsx("div", { className: "input-container" },
+      DOM.Jsx(
+        "div",
+        { className: "input-container" },
         DOM.Jsx("input", {
           className: "new-todo",
           id: "todo-input",
@@ -366,63 +508,127 @@ export function Completed() {
             console.log(document.getElementById("todo-input").value);
 
             if (e.code === "Enter") {
-              SetNewTodoList(e.target.value, false)
+              SetNewTodoList(e.target.value, false);
             }
-          }
+          },
         }),
-        DOM.Jsx("label", {
-          className: "visually-hidden",
-          for: "todo-input"
-        }, "New Todo Input")
+        DOM.Jsx(
+          "label",
+          {
+            className: "visually-hidden",
+            for: "todo-input",
+          },
+          "New Todo Input"
+        )
       )
     ),
 
-    DOM.Jsx("main", { className: "main", "data-testid": "main" },
-      DOM.Jsx("div", { className: "toggle-all-container" },
-        todoList.length > 0 ? DOM.Jsx("input", {
-          className: "toggle-all",
-          type: "checkbox",
-          id: "toggle-all",
-          "data-testid": "toggle-all"
-        }) : "",
-        todoList.length > 0 ? DOM.Jsx("label", {
-          className: "toggle-all-label",
-          for: "toggle-all"
-        }, "Toggle All Input") : ""
+    DOM.Jsx(
+      "main",
+      { className: "main", "data-testid": "main" },
+      DOM.Jsx(
+        "div",
+        { className: "toggle-all-container" },
+        todoList.length > 0
+          ? DOM.Jsx("input", {
+              className: "toggle-all",
+              type: "checkbox",
+              id: "toggle-all",
+              "data-testid": "toggle-all",
+            })
+          : "",
+        todoList.length > 0
+          ? DOM.Jsx(
+              "label",
+              {
+                className: "toggle-all-label",
+                for: "toggle-all",
+              },
+              "Toggle All Input"
+            )
+          : ""
       ),
 
-      todoList.length > 0 ? DOM.Jsx("ul", { className: "todo-list", "data-testid": "todo-list" },
-        ...filteredTodos.map((todo) => {
-          return DOM.Jsx("li", { className: "", "data-testid": "todo-item" },
-            DOM.Jsx("div", { className: "view" },
-              DOM.Jsx("input", {
-                className: "toggle",
-                type: "checkbox",
-                "data-testid": "todo-item-toggle",
-                onclick: () => {
-                  AddToCommple(todo.done)
-                }
-              }),
-              DOM.Jsx("label", { "data-testid": "todo-item-label" }, todo.text),
-              DOM.Jsx("button", {
-                className: "destroy", "data-testid": "todo-item-button", onclick: () => {
-                  RemoveToList(todo.id)
-                }
-              })
-            )
-          );
-        })
-      ) : ""
+      todoList.length > 0
+        ? DOM.Jsx(
+            "ul",
+            { className: "todo-list", "data-testid": "todo-list" },
+            ...filteredTodos.map((todo) => {
+              return DOM.Jsx(
+                "li",
+                {
+                  className: todo.done ? "completed" : "",
+                  "data-testid": "todo-item",
+                },
+                DOM.Jsx(
+                  "div",
+                  { className: "view" },
+                  DOM.Jsx("input", {
+                    className: "toggle",
+                    type: "checkbox",
+                    "data-testid": "todo-item-toggle",
+                    checked: todo.done,
+                    onclick: () => {
+                      AddToCommple(todo.done);
+                    },
+                  }),
+                  DOM.Jsx(
+                    "label",
+                    { "data-testid": "todo-item-label" },
+                    todo.text
+                  ),
+                  DOM.Jsx("button", {
+                    className: "destroy",
+                    "data-testid": "todo-item-button",
+                    onclick: () => {
+                      RemoveToList(todo.id);
+                    },
+                  })
+                )
+              );
+            })
+          )
+        : ""
     ),
 
-    todoList.length > 0 ? DOM.Jsx("footer", { className: "footer", "data-testid": "footer" },
-      DOM.Jsx("span", { className: "todo-count" }, `${todoList.length} item(s) left!`),
-      DOM.Jsx("ul", { className: "filters", "data-testid": "footer-navigation" },
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "selected", href: "/" }, "All")),
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "", href: "/active" }, "Active")),
-        DOM.Jsx("li", {}, DOM.Jsx("Link", { className: "", href: "/completed" }, "Completed"))
-      ),
-      DOM.Jsx("button", { className: "clear-completed", disabled: true }, "Clear completed")
-    ) : ""
+    todoList.length > 0
+      ? DOM.Jsx(
+          "footer",
+          { className: "footer", "data-testid": "footer" },
+          DOM.Jsx(
+            "span",
+            { className: "todo-count" },
+            `${todoList.length} item(s) left!`
+          ),
+          DOM.Jsx(
+            "ul",
+            { className: "filters", "data-testid": "footer-navigation" },
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx("Link", { className: "selected", href: "/" }, "All")
+            ),
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx("Link", { className: "", href: "/active" }, "Active")
+            ),
+            DOM.Jsx(
+              "li",
+              {},
+              DOM.Jsx(
+                "Link",
+                { className: "", href: "/completed" },
+                "Completed"
+              )
+            )
+          ),
+          DOM.Jsx(
+            "button",
+            { className: "clear-completed", disabled: true },
+            "Clear completed"
+          )
+        )
+      : ""
   );
 }
