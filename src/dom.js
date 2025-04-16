@@ -119,18 +119,13 @@ export const DOM = (function () {
     console.log(rout, "current style", currentStyles);
 
     if (rout === undefined) {
-      if (currentStyles != ["./style/notFound.css"]) {
-        replacestyle(["./style/notFound.css"]);
-      }
+      replacestyle(["./style/notFound.css"]);
       currentStyles = ["./style/notFound.css"];
       root.replaceChildren(CreateElement(NotFound()));
       return;
     }
-
-    if (rout.styles !== currentStyles) {
-      replacestyle(rout.styles);
-      currentStyles = rout.styles;
-    }
+    replacestyle(rout.styles);
+    currentStyles = rout.styles;
 
     root.replaceChildren(CreateElement(rout.func()));
   }
@@ -139,7 +134,17 @@ export const DOM = (function () {
     console.log("Applying styles:", styles);
 
     const links = document.querySelectorAll("link[rel='stylesheet']");
-    links.forEach((link) => link.remove());
+    links.forEach((link) => {
+      const style = link.href.slice(document.location.origin.length)
+
+      if (styles.includes(style)) {
+        return
+      }
+
+      link.remove()
+
+    }
+    );
 
     for (let href of styles) {
       const link = document.createElement("link");
