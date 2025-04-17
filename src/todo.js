@@ -308,7 +308,44 @@ export function TodoApp2() {
                 }),
                 DOM.Jsx(
                   "label",
-                  { "data-testid": "todo-item-label" },
+                  { 
+                    "data-testid": "todo-item-label",
+                    ondblclick: (e) => {
+                      console.log("double clicked");
+                      
+                      const li = e.target.closest('li');
+                      li.classList.add('editing');
+                      
+                      const input = document.createElement('input');
+                      input.className = 'edit';
+                      input.value = todo.text;
+                      li.appendChild(input);
+                      
+                      input.focus();
+                      input.setSelectionRange(0, input.value.length);
+                      
+                      const saveEdit = () => {
+                        const newText = input.value.trim();
+                        if (newText !== '') {
+                          todo.text = newText;
+                        }
+                        li.classList.remove('editing');
+                        li.removeChild(input);
+                        DOM.render();
+                      };
+                      
+                      input.addEventListener('blur', saveEdit);
+                      input.addEventListener('keydown', (e) => {
+                        if (e.code === 'Enter') {
+                          saveEdit();
+                        } else if (e.code === 'Escape') {
+                          li.classList.remove('editing');
+                          li.removeChild(input);
+                          DOM.render();
+                        }
+                      });
+                    },
+                  },
                   todo.text
                 ),
                 DOM.Jsx("button", {
@@ -327,8 +364,7 @@ export function TodoApp2() {
 
     todoList.length > 0
       ? DOM.Jsx(
-        "footer",
-        { className: "footer", "data-testid": "footer" },
+        "footer", { className: "footer", "data-testid": "footer" },
         DOM.Jsx(
           "span",
           { className: "todo-count" },
@@ -469,7 +505,11 @@ export function Active() {
                 }),
                 DOM.Jsx(
                   "label",
-                  { "data-testid": "todo-item-label" },
+                  { "data-testid": "todo-item-label",
+                    ondblclick: () => {
+                      console.log("double clicked");
+                    },
+                   },
                   todo.text
                 ),
                 DOM.Jsx("button", {
@@ -628,7 +668,11 @@ export function Completed() {
                 }),
                 DOM.Jsx(
                   "label",
-                  { "data-testid": "todo-item-label" },
+                  { "data-testid": "todo-item-label",
+                    ondblclick: () => {
+                      console.log("double clicked");
+                    },
+                   },
                   todo.text
                 ),
                 DOM.Jsx("button", {
