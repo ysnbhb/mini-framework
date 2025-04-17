@@ -1,7 +1,6 @@
 import { DOM } from "./dom.js";
 
 let todoList = [
-  {text : "hhhhh" , done : true , id : 10}
 ];
 
 export function TodoApp() {
@@ -237,6 +236,7 @@ export function TodoApp2() {
 
             if (e.code === "Enter") {
               SetNewTodoList(e.target.value, false);
+              e.target.value = ""
             }
           },
         }),

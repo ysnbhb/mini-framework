@@ -144,8 +144,12 @@ export const DOM = (function () {
 
 
   function updateAttributes(element, oldAttrs, newAttrs) {
+    console.log("jjj");
+    
     oldAttrs = oldAttrs || {};
     newAttrs = newAttrs || {};
+    console.log(newAttrs);
+    
     Object.entries(oldAttrs).forEach(([key, _]) => {
       if (key.startsWith('on')) {
         const eventName = key.toLowerCase()
@@ -157,12 +161,17 @@ export const DOM = (function () {
       }
     });
     Object.entries(newAttrs).forEach(([key, value]) => {
+      console.log(key , value);
+      
       if (oldAttrs[key] === value) return;
 
       if (key.startsWith('on')) {
         const eventName = key.toLowerCase()
         element[eventName] = value
-      } else if (typeof value === "boolean") {
+      } else if (key === "className") {
+        element.className = value
+      }
+      else if (typeof value === "boolean") {
 
         element[key] = value
 
@@ -184,7 +193,7 @@ export const DOM = (function () {
 
 
   function updateElement(realElement, oldVDom, newVDom) {
-    updateAttributes(realElement, oldVDom.attrs, newVDom.attrs);
+    updateAttributes(realElement, oldVDom.props, newVDom.props);
 
     updateChildren(realElement, oldVDom.childeren, newVDom.childeren);
   }
