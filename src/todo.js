@@ -1,6 +1,8 @@
 import { DOM } from "./dom.js";
 
-let todoList = [];
+let todoList = [
+  {text : "hhhhh" , done : true , id : 10}
+];
 
 export function TodoApp() {
   const [todos, setTodos] = DOM.useStates([]);
@@ -92,12 +94,6 @@ export function TodoApp() {
           "span",
           {
             className: `todo-text${todo.done ? " done" : ""}`,
-            // onDoubleClick: () => {
-            //   const newText = prompt("Edit todo", todo.text);
-            //   if (newText !== null) {
-            //     handleEditTodo(index, newText);
-            //   }
-            // },
           },
           todo.text
         ),
