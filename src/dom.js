@@ -4,6 +4,8 @@ import { Navigate, router } from "./router.js";
 export const DOM = (function () {
   let states = [];
   let statesIndex = 0;
+  let CurrentDom
+  const root = document.querySelector("#root")
   function useStates(initialValue) {
     const currentIndex = statesIndex;
     states[currentIndex] =
@@ -21,22 +23,6 @@ export const DOM = (function () {
     statesIndex++;
     return [states[currentIndex], setStates];
   }
-
-  let effect = [];
-  let effectIndex = 0;
-  function UseEffect(callBack, defpen) {
-    const oldDepn = effect[effectIndex];
-    let hasCahnged = true;
-    if (oldDepn) {
-      hasCahnged = defpen.some((dep, i) => !Object.is(dep, oldDepn[i]));
-    }
-    if (hasCahnged) {
-      callBack();
-    }
-    effect[effectIndex] = defpen;
-    effectIndex++;
-  }
-
   function Jsx(tag, props, ...childeren) {
     if (typeof tag === "function") {
       return tag({ ...props, childeren });
@@ -75,7 +61,6 @@ export const DOM = (function () {
       } else if (name === "__htmldanger") {
         element.innerHTML = value;
       } else {
-        // ✅ Proper DOM property assignment
         if (typeof value === "boolean") {
           if (value) {
             element.setAttribute(name, "");
@@ -108,45 +93,47 @@ export const DOM = (function () {
   let currentStyles = [];
 
   function render() {
-    console.log("Rendering...");
-
     statesIndex = 0;
-    effectIndex = 0;
-
     const getPath = () => document.location.pathname;
     const rout = router.routes[getPath()];
-    const root = document.querySelector("#root");
-    console.log(rout, "current style", currentStyles);
-
     if (rout === undefined) {
       replacestyle(["./style/notFound.css"]);
       currentStyles = ["./style/notFound.css"];
+      const DOm = NotFound()
+      console.log(DOm);
+      
       root.replaceChildren(CreateElement(NotFound()));
+      CurrentDom = DOm
       return;
     }
     replacestyle(rout.styles);
     currentStyles = rout.styles;
-
+    console.log(root.children[0]);
+    const Dom = rout.func()
+    console.log(Dom);
+    
     root.replaceChildren(CreateElement(rout.func()));
+    CurrentDom = Dom
   }
 
   function replacestyle(styles = []) {
-    console.log("Applying styles:", styles);
-
     const links = document.querySelectorAll("link[rel='stylesheet']");
+    const linksStyle = []
     links.forEach((link) => {
       const style = link.href.slice(document.location.origin.length)
 
       if (styles.includes(style)) {
+        linksStyle.push(style)
         return
       }
-
       link.remove()
-
     }
     );
 
     for (let href of styles) {
+      if (linksStyle.includes(href)) {
+        continue
+      }
       const link = document.createElement("link");
       link.setAttribute("rel", "stylesheet");
       link.setAttribute("href", href);
@@ -154,5 +141,5 @@ export const DOM = (function () {
     }
   }
 
-  return { useStates, UseEffect, render, Jsx, CreateElement };
+  return { useStates, render, Jsx, CreateElement };
 })();
