@@ -144,11 +144,9 @@ export const DOM = (function () {
 
 
   function updateAttributes(element, oldAttrs, newAttrs) {
-    console.log("jjj");
     
     oldAttrs = oldAttrs || {};
     newAttrs = newAttrs || {};
-    console.log(newAttrs);
     
     Object.entries(oldAttrs).forEach(([key, _]) => {
       if (key.startsWith('on')) {
@@ -161,7 +159,6 @@ export const DOM = (function () {
       }
     });
     Object.entries(newAttrs).forEach(([key, value]) => {
-      console.log(key , value);
       
       if (oldAttrs[key] === value) return;
 
@@ -181,11 +178,8 @@ export const DOM = (function () {
           element.removeAttribute(key);
         }
       } else {
-        if (key === "ref") {
-          value.current = element
-        } else {
+        
           element.setAttribute(key, value);
-        }
       }
     });
 
@@ -262,7 +256,7 @@ export const DOM = (function () {
               updateElement(realChild, oldChild, newChild);
             } else {
               const newElement = CreateElement(newChild)
-              element.replaceChild(newElement, realChild);
+              element.replaceChildren(newElement);
             }
           } else {
             const newElement = CreateElement(newChild)
