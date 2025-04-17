@@ -201,6 +201,8 @@ const saveEdit = (newText, id) => {
     return todo
   })
   editId = undefined
+  console.log(todoList);
+
   DOM.render();
 };
 
@@ -307,7 +309,6 @@ export function TodoApp2() {
           "ul",
           { className: "todo-list", "data-testid": "todo-list" },
           ...todoList.map((todo) => {
-            console.log(editId, editId == todo.id);
 
             return DOM.Jsx(
               "li",
@@ -318,7 +319,7 @@ export function TodoApp2() {
               DOM.Jsx(
                 "div",
                 { className: "view" },
-                DOM.Jsx("input", {
+                editId != todo.id ? DOM.Jsx("input", {
                   className: "toggle",
                   type: "checkbox",
                   "data-testid": "todo-item-toggle",
@@ -326,38 +327,40 @@ export function TodoApp2() {
                   onclick: () => {
                     AddToCommple(todo.id);
                   },
-                }),
-                editId != todo.id ? DOM.Jsx(
+                }) : "",
+                DOM.Jsx(
                   "label",
                   {
                     "data-testid": "todo-item-label",
                     ondblclick: () => {
                       editId = todo.id
                       DOM.render()
+                    },
+                    contenteditable: editId == todo.id,
+                    onkeydown: (e) => {
+                      if (e.code === "Enter") {
+                        saveEdit(e.target.textContent, todo.id)
+                      }
+                    },
+                    onblur: () => {
+                      editId = undefined
+                      DOM.render()
+                    },
+                    ref: (el) => {
+                      if (editId === todo.id) {
+                        el.focus();
+                      }
                     }
                   },
                   todo.text
-                ) : DOM.Jsx("input", {
-                  "data-testid": "todo-item-label",
-                  onkeydown: (e) => {
-                    if (e.code == "Enter") {
-                      saveEdit(e.target.value)
-                    }
-                  },
-                  onblur: () => {
-                    editId = undefined
-                    DOM.render()
-                  },
-                  // className: "edit",
-                  value: todo.text
-                }),
-                DOM.Jsx("button", {
+                ),
+                editId != todo.id ? DOM.Jsx("button", {
                   className: "destroy",
                   "data-testid": "todo-item-button",
                   onclick: () => {
                     RemoveToList(todo.id);
                   },
-                })
+                }) : ""
               )
             );
           })

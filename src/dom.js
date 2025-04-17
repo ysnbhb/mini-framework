@@ -60,7 +60,10 @@ export const DOM = (function () {
         element.id = value;
       } else if (name === "__htmldanger") {
         element.innerHTML = value;
-      } else {
+      } else if (name === "ref" && typeof value === "function") {
+        value(element);
+      }
+      else {
         if (typeof value === "boolean") {
           if (value) {
             element.setAttribute(name, "");
@@ -144,10 +147,10 @@ export const DOM = (function () {
 
 
   function updateAttributes(element, oldAttrs, newAttrs) {
-    
+
     oldAttrs = oldAttrs || {};
     newAttrs = newAttrs || {};
-    
+
     Object.entries(oldAttrs).forEach(([key, _]) => {
       if (key.startsWith('on')) {
         const eventName = key.toLowerCase()
@@ -159,7 +162,7 @@ export const DOM = (function () {
       }
     });
     Object.entries(newAttrs).forEach(([key, value]) => {
-      
+
       if (oldAttrs[key] === value) return;
 
       if (key.startsWith('on')) {
@@ -178,8 +181,11 @@ export const DOM = (function () {
           element.removeAttribute(key);
         }
       } else {
-        
+        if (key === "ref") {
+          value.current = element
+        } else {
           element.setAttribute(key, value);
+        }
       }
     });
 
@@ -205,7 +211,9 @@ export const DOM = (function () {
     });
 
     // Remove old children whose keys are not in newChildren
-    const newKeys = new Set(newChildren.filter(c => typeof c !== 'string' && c.attrs?.key).map(c => c.attrs.key));
+    console.log("goooo", newChildren);
+
+    const newKeys = new Set(newChildren.filter(c => typeof c !== 'string' && c?.attrs?.key).map(c => c.attrs.key));
     oldKeys.forEach((value, key) => {
       if (!newKeys.has(key)) {
         element.removeChild(value.element);
@@ -213,6 +221,7 @@ export const DOM = (function () {
     });
 
     // Update or insert children at each position
+
     newChildren.forEach((newChild, i) => {
       let realChild = element.childNodes[i];
 
@@ -256,7 +265,7 @@ export const DOM = (function () {
               updateElement(realChild, oldChild, newChild);
             } else {
               const newElement = CreateElement(newChild)
-              element.replaceChildren(newElement);
+              element.replaceChild(newElement, realChild);
             }
           } else {
             const newElement = CreateElement(newChild)
