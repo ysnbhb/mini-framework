@@ -191,8 +191,8 @@ export const DOM = (function () {
 
     const oldKeys = new Map();
     oldChildren.forEach((child, index) => {
-      if (typeof child !== "string" && child.attrs?.key) {
-        oldKeys.set(child.attrs.key, {
+      if (typeof child !== "string" && child.props?.key) {
+        oldKeys.set(child.props.key, {
           vdom: child,
           element: element.childNodes[index],
         });
@@ -202,7 +202,7 @@ export const DOM = (function () {
     // Remove old children whose keys are not in newChildren
     const newKeys = new Set(
       newChildren
-        .filter((c) => typeof c !== "string" && c?.attrs?.key)
+        .filter((c) => typeof c !== "string" && c?.props?.key)
         .map((c) => c.attrs.key)
     );
     oldKeys.forEach((value, key) => {
@@ -230,7 +230,7 @@ export const DOM = (function () {
           }
         }
       } else {
-        const newKey = newChild.attrs?.key;
+        const newKey = newChild.props?.key;
         if (newKey) {
           const oldEntry = oldKeys.get(newKey);
           if (oldEntry) {
@@ -255,7 +255,7 @@ export const DOM = (function () {
             if (
               typeof oldChild === "object" &&
               oldChild.tag === newChild.tag &&
-              !oldChild.attrs?.key
+              !oldChild.props?.key
             ) {
               updateElement(realChild, oldChild, newChild);
             } else {
