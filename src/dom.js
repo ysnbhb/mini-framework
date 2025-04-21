@@ -49,7 +49,6 @@ export const DOM = (function () {
     } else {
       element = document.createElement(node.tag);
     }
-
     for (let [name, value] of Object.entries(node.props)) {
       if (name.startsWith("on") && typeof value === "function") {
         const eventName = name.slice(2).toLowerCase();
@@ -172,7 +171,7 @@ export const DOM = (function () {
         }
       } else {
         if (key === "ref") {
-          value.current = element;
+          value(element);
         } else {
           element.setAttribute(key, value);
         }
