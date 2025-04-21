@@ -58,8 +58,6 @@ export const DOM = (function () {
         element.className = value;
       } else if (name === "id") {
         element.id = value;
-      } else if (name === "__htmldanger") {
-        element.innerHTML = value;
       } else if (name === "ref" && typeof value === "function") {
         value(element);
       }
