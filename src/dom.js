@@ -41,11 +41,11 @@ export const DOM = (function () {
     let element;
     if (node.tag === "Link") {
       element = document.createElement("a");
-      element.addEventListener("click", (e) => {
+      element.onclick = (e) => {
         e.preventDefault();
         const rout = Navigate();
         rout.push(element.href);
-      });
+      };
     } else {
       element = document.createElement(node.tag);
     }
