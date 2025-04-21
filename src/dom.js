@@ -200,8 +200,6 @@ export const DOM = (function () {
     });
 
     // Remove old children whose keys are not in newChildren
-    console.log("goooo", newChildren);
-
     const newKeys = new Set(
       newChildren
         .filter((c) => typeof c !== "string" && c?.attrs?.key)

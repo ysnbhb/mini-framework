@@ -41,8 +41,6 @@ const saveEdit = (newText, id) => {
     return todo;
   });
   editId = undefined;
-  console.log(todoList);
-
   DOM.render();
 };
 
