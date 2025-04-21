@@ -4,8 +4,8 @@ import { Navigate, router } from "./router.js";
 export const DOM = (function () {
   let states = [];
   let statesIndex = 0;
-  let CurrentDom
-  const root = document.querySelector("#root")
+  let CurrentDom;
+  const root = document.querySelector("#root");
   function useStates(initialValue) {
     const currentIndex = statesIndex;
     states[currentIndex] =
@@ -60,8 +60,7 @@ export const DOM = (function () {
         element.id = value;
       } else if (name === "ref" && typeof value === "function") {
         value(element);
-      }
-      else {
+      } else {
         if (typeof value === "boolean") {
           if (value) {
             element.setAttribute(name, "");
@@ -96,45 +95,43 @@ export const DOM = (function () {
     const getPath = () => document.location.pathname;
     const rout = router.routes[getPath()];
     if (rout === undefined) {
-      const DOm = NotFound()
+      const DOm = NotFound();
       if (CurrentDom) {
-        updateElement(root.children[0], CurrentDom, DOm)
+        updateElement(root.children[0], CurrentDom, DOm);
       } else {
         root.replaceChildren(CreateElement(NotFound()));
       }
       replacestyle(["./style/notFound.css"]);
-      CurrentDom = DOm
+      CurrentDom = DOm;
       return;
     }
-    const Dom = rout.func()
+    const Dom = rout.func();
 
     if (CurrentDom) {
-      updateElement(root.children[0], CurrentDom, Dom)
-
+      updateElement(root.children[0], CurrentDom, Dom);
     } else {
       root.replaceChildren(CreateElement(rout.func()));
     }
     replacestyle(rout.styles);
-    CurrentDom = Dom
+    CurrentDom = Dom;
   }
 
   function replacestyle(styles = []) {
     const links = document.querySelectorAll("link[rel='stylesheet']");
-    const linksStyle = []
+    const linksStyle = [];
     links.forEach((link) => {
-      const style = link.href.slice(document.location.origin.length)
+      const style = link.href.slice(document.location.origin.length);
 
       if (styles.includes(style)) {
-        linksStyle.push(style)
-        return
+        linksStyle.push(style);
+        return;
       }
-      link.remove()
-    }
-    );
+      link.remove();
+    });
 
     for (let href of styles) {
       if (linksStyle.includes(href)) {
-        continue
+        continue;
       }
       const link = document.createElement("link");
       link.setAttribute("rel", "stylesheet");
@@ -143,52 +140,45 @@ export const DOM = (function () {
     }
   }
 
-
   function updateAttributes(element, oldAttrs, newAttrs) {
-
     oldAttrs = oldAttrs || {};
     newAttrs = newAttrs || {};
 
     Object.entries(oldAttrs).forEach(([key, _]) => {
-      if (key.startsWith('on')) {
-        const eventName = key.toLowerCase()
+      if (key.startsWith("on")) {
+        const eventName = key.toLowerCase();
         if (!newAttrs[eventName]) {
-          element[eventName] = null
+          element[eventName] = null;
         }
       } else if (!(key in newAttrs)) {
         element.removeAttribute(key);
       }
     });
     Object.entries(newAttrs).forEach(([key, value]) => {
-
       if (oldAttrs[key] === value) return;
 
-      if (key.startsWith('on')) {
-        const eventName = key.toLowerCase()
-        element[eventName] = value
+      if (key.startsWith("on") && typeof value === "function") {
+        const eventName = key.toLowerCase();
+        element[eventName] = value;
       } else if (key === "className") {
-        element.className = value
-      }
-      else if (typeof value === "boolean") {
-
-        element[key] = value
+        element.className = value;
+      } else if (typeof value === "boolean") {
+        element[key] = value;
 
         if (value) {
-          element.setAttribute(key, '');
+          element.setAttribute(key, "");
         } else {
           element.removeAttribute(key);
         }
       } else {
         if (key === "ref") {
-          value.current = element
+          value.current = element;
         } else {
           element.setAttribute(key, value);
         }
       }
     });
-
   }
-
 
   function updateElement(realElement, oldVDom, newVDom) {
     updateAttributes(realElement, oldVDom.props, newVDom.props);
@@ -197,21 +187,27 @@ export const DOM = (function () {
   }
 
   function updateChildren(element, oldChildren, newChildren) {
-
     oldChildren = oldChildren || [];
     newChildren = newChildren || [];
 
     const oldKeys = new Map();
     oldChildren.forEach((child, index) => {
-      if (typeof child !== 'string' && child.attrs?.key) {
-        oldKeys.set(child.attrs.key, { vdom: child, element: element.childNodes[index] });
+      if (typeof child !== "string" && child.attrs?.key) {
+        oldKeys.set(child.attrs.key, {
+          vdom: child,
+          element: element.childNodes[index],
+        });
       }
     });
 
     // Remove old children whose keys are not in newChildren
     console.log("goooo", newChildren);
 
-    const newKeys = new Set(newChildren.filter(c => typeof c !== 'string' && c?.attrs?.key).map(c => c.attrs.key));
+    const newKeys = new Set(
+      newChildren
+        .filter((c) => typeof c !== "string" && c?.attrs?.key)
+        .map((c) => c.attrs.key)
+    );
     oldKeys.forEach((value, key) => {
       if (!newKeys.has(key)) {
         element.removeChild(value.element);
@@ -223,7 +219,7 @@ export const DOM = (function () {
     newChildren.forEach((newChild, i) => {
       let realChild = element.childNodes[i];
 
-      if (typeof newChild === 'string') {
+      if (typeof newChild === "string") {
         if (realChild && realChild.nodeType === Node.TEXT_NODE) {
           if (realChild.textContent !== newChild) {
             realChild.textContent = newChild;
@@ -248,7 +244,7 @@ export const DOM = (function () {
             }
             updateElement(realChild, oldEntry.vdom, newChild);
           } else {
-            const newElement = CreateElement(newChild)
+            const newElement = CreateElement(newChild);
             if (realChild) {
               element.insertBefore(newElement, realChild);
             } else {
@@ -259,14 +255,18 @@ export const DOM = (function () {
           // Handle non-keyed elements
           if (realChild && realChild.nodeType === Node.ELEMENT_NODE) {
             const oldChild = oldChildren[i];
-            if (typeof oldChild === 'object' && oldChild.tag === newChild.tag && !oldChild.attrs?.key) {
+            if (
+              typeof oldChild === "object" &&
+              oldChild.tag === newChild.tag &&
+              !oldChild.attrs?.key
+            ) {
               updateElement(realChild, oldChild, newChild);
             } else {
-              const newElement = CreateElement(newChild)
+              const newElement = CreateElement(newChild);
               element.replaceChild(newElement, realChild);
             }
           } else {
-            const newElement = CreateElement(newChild)
+            const newElement = CreateElement(newChild);
             if (realChild) {
               element.replaceChild(newElement, realChild);
             } else {
