@@ -205,12 +205,12 @@ router.init();
 The `jsx` function creates virtual DOM nodes:
 
 ```javascript
-function Jsx(tag, attrs, ...children) {
+function Jsx(tag, props, ...children) {
   if (typeof tag === "function") {
-    return tag({ ...attrs, children });
+    return tag({ ...props, children });
   }
 
-  return { tag, attrs: attrs || {}, children };
+  return { tag, props: props || {}, children };
 }
 ```
 
