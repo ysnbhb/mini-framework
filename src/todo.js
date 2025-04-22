@@ -495,7 +495,7 @@ function Header() {
         placeholder: "What needs to be done?",
         onkeydown: (e) => {
           if (e.code === "Enter") {
-            SetNewTodoList(newTodo, false);
+            SetNewTodoList(e.target.value, false);
             e.target.value = "";
             setNewTodo("");
           } else {
