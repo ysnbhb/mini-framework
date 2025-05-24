@@ -30,6 +30,9 @@ function UpdateAll() {
 }
 
 const saveEdit = (newText, id) => {
+  if (newText.trim().length <= 1) {
+    return
+  }
   todoList = todoList.map((todo) => {
     if (todo.id == id) {
       return {
