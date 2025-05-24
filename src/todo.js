@@ -89,94 +89,94 @@ export function App() {
           { className: "toggle-all-container" },
           todoList.length > 0
             ? DOM.Jsx("input", {
-                className: "toggle-all",
-                type: "checkbox",
-                id: "toggle-all",
-                "data-testid": "toggle-all",
-                onclick: () => {
-                  UpdateAll();
-                },
-              })
+              className: "toggle-all",
+              type: "checkbox",
+              id: "toggle-all",
+              "data-testid": "toggle-all",
+              onclick: () => {
+                UpdateAll();
+              },
+            })
             : "",
           todoList.length > 0
             ? DOM.Jsx(
-                "label",
-                {
-                  className: "toggle-all-label",
-                  for: "toggle-all",
-                  onclick: () => {
-                    UpdateAll();
-                  },
+              "label",
+              {
+                className: "toggle-all-label",
+                for: "toggle-all",
+                onclick: () => {
+                  UpdateAll();
                 },
-                "Toggle All Input"
-              )
+              },
+              "Toggle All Input"
+            )
             : ""
         ),
 
         todoList.length > 0
           ? DOM.Jsx(
-              "ul",
-              { className: "todo-list", "data-testid": "todo-list" },
-              ...todoList.map((todo) =>
+            "ul",
+            { className: "todo-list", "data-testid": "todo-list" },
+            ...todoList.map((todo) =>
+              DOM.Jsx(
+                "li",
+                {
+                  className: todo.done ? "completed" : "",
+                  "data-testid": "todo-item",
+                },
                 DOM.Jsx(
-                  "li",
-                  {
-                    className: todo.done ? "completed" : "",
-                    "data-testid": "todo-item",
-                  },
-                  DOM.Jsx(
-                    "div",
-                    { className: "view" },
-                    editId != todo.id
-                      ? DOM.Jsx("input", {
-                          className: "toggle",
-                          type: "checkbox",
-                          "data-testid": "todo-item-toggle",
-                          checked: todo.done,
-                          onclick: () => {
-                            AddToCommple(todo.id);
-                          },
-                        })
-                      : "",
-                    DOM.Jsx(
-                      "label",
-                      {
-                        "data-testid": "todo-item-label",
-                        ondblclick: () => {
-                          editId = todo.id;
-                          DOM.render();
-                        },
-                        contenteditable: editId == todo.id,
-                        onkeydown: (e) => {
-                          if (e.code === "Enter") {
-                            saveEdit(e.target.textContent, todo.id);
-                          }
-                        },
-                        onblur: () => {
-                          editId = undefined;
-                          DOM.render();
-                        },
-                        ref: (el) => {
-                          if (editId === todo.id) {
-                            el.focus();
-                          }
-                        },
+                  "div",
+                  { className: "view" },
+                  editId != todo.id
+                    ? DOM.Jsx("input", {
+                      className: "toggle",
+                      type: "checkbox",
+                      "data-testid": "todo-item-toggle",
+                      checked: todo.done,
+                      onclick: () => {
+                        AddToCommple(todo.id);
                       },
-                      todo.text
-                    ),
-                    editId != todo.id
-                      ? DOM.Jsx("button", {
-                          className: "destroy",
-                          "data-testid": "todo-item-button",
-                          onclick: () => {
-                            RemoveToList(todo.id);
-                          },
-                        })
-                      : ""
-                  )
+                    })
+                    : "",
+                  DOM.Jsx(
+                    "label",
+                    {
+                      "data-testid": "todo-item-label",
+                      ondblclick: () => {
+                        editId = todo.id;
+                        DOM.render();
+                      },
+                      contenteditable: editId == todo.id,
+                      onkeydown: (e) => {
+                        if (e.code === "Enter") {
+                          saveEdit(e.target.textContent, todo.id);
+                        }
+                      },
+                      onblur: () => {
+                        editId = undefined;
+                        DOM.render();
+                      },
+                      ref: (el) => {
+                        if (editId === todo.id) {
+                          el.focus();
+                        }
+                      },
+                    },
+                    todo.text
+                  ),
+                  editId != todo.id
+                    ? DOM.Jsx("button", {
+                      className: "destroy",
+                      "data-testid": "todo-item-button",
+                      onclick: () => {
+                        RemoveToList(todo.id);
+                      },
+                    })
+                    : ""
                 )
               )
             )
+          )
           : ""
       ),
       todoList.length > 0 ? DOM.Jsx(Footer, { filter: "all" }) : ""
@@ -205,94 +205,94 @@ export function Active() {
           { className: "toggle-all-container" },
           filteredTodos.length > 0
             ? DOM.Jsx("input", {
-                className: "toggle-all",
-                type: "checkbox",
-                id: "toggle-all",
-                "data-testid": "toggle-all",
-                onclick: () => {
-                  UpdateAll();
-                },
-              })
+              className: "toggle-all",
+              type: "checkbox",
+              id: "toggle-all",
+              "data-testid": "toggle-all",
+              onclick: () => {
+                UpdateAll();
+              },
+            })
             : "",
           filteredTodos.length > 0
             ? DOM.Jsx(
-                "label",
-                {
-                  className: "toggle-all-label",
-                  for: "toggle-all",
-                  onclick: () => {
-                    UpdateAll();
-                  },
+              "label",
+              {
+                className: "toggle-all-label",
+                for: "toggle-all",
+                onclick: () => {
+                  UpdateAll();
                 },
-                "Toggle All Input"
-              )
+              },
+              "Toggle All Input"
+            )
             : ""
         ),
 
         todoList.length > 0
           ? DOM.Jsx(
-              "ul",
-              { className: "todo-list", "data-testid": "todo-list" },
-              ...filteredTodos.map((todo, index) => {
-                return DOM.Jsx(
-                  "li",
-                  {
-                    className: todo.done ? "completed" : ``,
-                    "data-testid": "todo-item",
-                  },
-                  DOM.Jsx(
-                    "div",
-                    { className: "view" },
-                    editId != todo.id
-                      ? DOM.Jsx("input", {
-                          className: "toggle",
-                          type: "checkbox",
-                          "data-testid": "todo-item-toggle",
-                          checked: todo.done,
-                          onclick: () => {
-                            AddToCommple(todo.id);
-                          },
-                        })
-                      : "",
-                    DOM.Jsx(
-                      "label",
-                      {
-                        "data-testid": "todo-item-label",
-                        ondblclick: () => {
-                          editId = todo.id;
-                          DOM.render();
-                        },
-                        contenteditable: editId == todo.id,
-                        onkeydown: (e) => {
-                          if (e.code === "Enter") {
-                            saveEdit(e.target.textContent, todo.id);
-                          }
-                        },
-                        onblur: () => {
-                          editId = undefined;
-                          DOM.render();
-                        },
-                        ref: (el) => {
-                          if (editId === todo.id) {
-                            el.focus();
-                          }
-                        },
+            "ul",
+            { className: "todo-list", "data-testid": "todo-list" },
+            ...filteredTodos.map((todo, index) => {
+              return DOM.Jsx(
+                "li",
+                {
+                  className: todo.done ? "completed" : ``,
+                  "data-testid": "todo-item",
+                },
+                DOM.Jsx(
+                  "div",
+                  { className: "view" },
+                  editId != todo.id
+                    ? DOM.Jsx("input", {
+                      className: "toggle",
+                      type: "checkbox",
+                      "data-testid": "todo-item-toggle",
+                      checked: todo.done,
+                      onclick: () => {
+                        AddToCommple(todo.id);
                       },
-                      todo.text
-                    ),
-                    editId != todo.id
-                      ? DOM.Jsx("button", {
-                          className: "destroy",
-                          "data-testid": "todo-item-button",
-                          onclick: () => {
-                            RemoveToList(todo.id);
-                          },
-                        })
-                      : ""
-                  )
-                );
-              })
-            )
+                    })
+                    : "",
+                  DOM.Jsx(
+                    "label",
+                    {
+                      "data-testid": "todo-item-label",
+                      ondblclick: () => {
+                        editId = todo.id;
+                        DOM.render();
+                      },
+                      contenteditable: editId == todo.id,
+                      onkeydown: (e) => {
+                        if (e.code === "Enter") {
+                          saveEdit(e.target.textContent, todo.id);
+                        }
+                      },
+                      onblur: () => {
+                        editId = undefined;
+                        DOM.render();
+                      },
+                      ref: (el) => {
+                        if (editId === todo.id) {
+                          el.focus();
+                        }
+                      },
+                    },
+                    todo.text
+                  ),
+                  editId != todo.id
+                    ? DOM.Jsx("button", {
+                      className: "destroy",
+                      "data-testid": "todo-item-button",
+                      onclick: () => {
+                        RemoveToList(todo.id);
+                      },
+                    })
+                    : ""
+                )
+              );
+            })
+          )
           : ""
       ),
 
@@ -322,94 +322,94 @@ export function Completed() {
           { className: "toggle-all-container" },
           filteredTodos.length > 0
             ? DOM.Jsx("input", {
-                className: "toggle-all",
-                type: "checkbox",
-                id: "toggle-all",
-                "data-testid": "toggle-all",
-                onclick: () => {
-                  UpdateAll();
-                },
-              })
+              className: "toggle-all",
+              type: "checkbox",
+              id: "toggle-all",
+              "data-testid": "toggle-all",
+              onclick: () => {
+                UpdateAll();
+              },
+            })
             : "",
           filteredTodos.length > 0
             ? DOM.Jsx(
-                "label",
-                {
-                  className: "toggle-all-label",
-                  for: "toggle-all",
-                  onclick: () => {
-                    UpdateAll();
-                  },
+              "label",
+              {
+                className: "toggle-all-label",
+                for: "toggle-all",
+                onclick: () => {
+                  UpdateAll();
                 },
-                "Toggle All Input"
-              )
+              },
+              "Toggle All Input"
+            )
             : ""
         ),
 
         todoList.length > 0
           ? DOM.Jsx(
-              "ul",
-              { className: "todo-list", "data-testid": "todo-list" },
-              ...filteredTodos.map((todo, index) => {
-                return DOM.Jsx(
-                  "li",
-                  {
-                    className: todo.done ? "completed" : ``,
-                    "data-testid": "todo-item",
-                  },
-                  DOM.Jsx(
-                    "div",
-                    { className: "view" },
-                    editId != todo.id
-                      ? DOM.Jsx("input", {
-                          className: "toggle",
-                          type: "checkbox",
-                          "data-testid": "todo-item-toggle",
-                          checked: todo.done,
-                          onclick: () => {
-                            AddToCommple(todo.id);
-                          },
-                        })
-                      : "",
-                    DOM.Jsx(
-                      "label",
-                      {
-                        "data-testid": "todo-item-label",
-                        ondblclick: () => {
-                          editId = todo.id;
-                          DOM.render();
-                        },
-                        contenteditable: editId == todo.id,
-                        onkeydown: (e) => {
-                          if (e.code === "Enter") {
-                            saveEdit(e.target.textContent, todo.id);
-                          }
-                        },
-                        onblur: () => {
-                          editId = undefined;
-                          DOM.render();
-                        },
-                        ref: (el) => {
-                          if (editId === todo.id) {
-                            el.focus();
-                          }
-                        },
+            "ul",
+            { className: "todo-list", "data-testid": "todo-list" },
+            ...filteredTodos.map((todo, index) => {
+              return DOM.Jsx(
+                "li",
+                {
+                  className: todo.done ? "completed" : ``,
+                  "data-testid": "todo-item",
+                },
+                DOM.Jsx(
+                  "div",
+                  { className: "view" },
+                  editId != todo.id
+                    ? DOM.Jsx("input", {
+                      className: "toggle",
+                      type: "checkbox",
+                      "data-testid": "todo-item-toggle",
+                      checked: todo.done,
+                      onclick: () => {
+                        AddToCommple(todo.id);
                       },
-                      todo.text
-                    ),
-                    editId != todo.id
-                      ? DOM.Jsx("button", {
-                          className: "destroy",
-                          "data-testid": "todo-item-button",
-                          onclick: () => {
-                            RemoveToList(todo.id);
-                          },
-                        })
-                      : ""
-                  )
-                );
-              })
-            )
+                    })
+                    : "",
+                  DOM.Jsx(
+                    "label",
+                    {
+                      "data-testid": "todo-item-label",
+                      ondblclick: () => {
+                        editId = todo.id;
+                        DOM.render();
+                      },
+                      contenteditable: editId == todo.id,
+                      onkeydown: (e) => {
+                        if (e.code === "Enter") {
+                          saveEdit(e.target.textContent, todo.id);
+                        }
+                      },
+                      onblur: () => {
+                        editId = undefined;
+                        DOM.render();
+                      },
+                      ref: (el) => {
+                        if (editId === todo.id) {
+                          el.focus();
+                        }
+                      },
+                    },
+                    todo.text
+                  ),
+                  editId != todo.id
+                    ? DOM.Jsx("button", {
+                      className: "destroy",
+                      "data-testid": "todo-item-button",
+                      onclick: () => {
+                        RemoveToList(todo.id);
+                      },
+                    })
+                    : ""
+                )
+              );
+            })
+          )
           : ""
       ),
 
@@ -479,7 +479,6 @@ function Footer({ filter = "all" }) {
 }
 
 function Header() {
-  const [newTodo, setNewTodo] = DOM.useStates("");
   return DOM.Jsx(
     "header",
     { className: "header", "data-testid": "header" },
@@ -495,14 +494,13 @@ function Header() {
         placeholder: "What needs to be done?",
         onkeydown: (e) => {
           if (e.code === "Enter") {
+            if (e.target.value == "") {
+              return
+            }
             SetNewTodoList(e.target.value, false);
-            e.target.value = "";
-            setNewTodo("");
-          } else {
-            setNewTodo(e.target.value);
+
           }
         },
-        value: newTodo,
       }),
       DOM.Jsx(
         "label",

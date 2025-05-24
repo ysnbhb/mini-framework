@@ -1,6 +1,6 @@
 import NotFound from "./notFound.js";
 import { Navigate, router } from "./router.js";
-
+let id = 0;
 export const DOM = (function () {
   let states = [];
   let statesIndex = 0;
@@ -30,12 +30,17 @@ export const DOM = (function () {
     return { tag, props: props || {}, childeren };
   }
 
-  function CreateElement(node) {
+  function CreateElement(container = root, node) {
     if (node === undefined || !node) {
-      return document.createTextNode("");
+      const textNode = document.createTextNode("");
+      container.append(textNode);
+      return textNode;
     }
     if (typeof node === "string" || typeof node === "number") {
-      return document.createTextNode(String(node));
+      const textNode = document.createTextNode(String(node));
+
+      container.append(textNode);
+      return textNode;
     }
 
     let element;
@@ -49,6 +54,7 @@ export const DOM = (function () {
     } else {
       element = document.createElement(node.tag);
     }
+    node.props = node.props || {};
     for (let [name, value] of Object.entries(node.props)) {
       if (name.startsWith("on") && typeof value === "function") {
         const eventName = name.slice(2).toLowerCase();
@@ -57,8 +63,9 @@ export const DOM = (function () {
         element.className = value;
       } else if (name === "id") {
         element.id = value;
-      } else if (name === "ref" && typeof value === "function") {
-        value(element);
+      } else if (name === "ref") {
+        if (typeof value === "function") value(element);
+        else value.current = element;
       } else {
         if (typeof value === "boolean") {
           if (value) {
@@ -77,15 +84,11 @@ export const DOM = (function () {
         }
       }
     }
-
+    node.childeren = node.childeren || [];
     for (let child of node.childeren.flat()) {
-      if (typeof child === "string" || typeof child === "number") {
-        element.append(document.createTextNode(String(child)));
-      } else {
-        element.append(CreateElement(child));
-      }
+      CreateElement(element, child);
     }
-
+    container.append(element);
     return element;
   }
 
@@ -95,23 +98,17 @@ export const DOM = (function () {
     const rout = router.routes[getPath()];
     if (rout === undefined) {
       const DOm = NotFound();
-      if (CurrentDom) {
-        updateElement(root.children[0], CurrentDom, DOm);
-      } else {
-        root.replaceChildren(CreateElement(NotFound()));
-      }
+      updateElement(root.children[0], CurrentDom, DOm);
       replacestyle(["./style/notFound.css"]);
       CurrentDom = DOm;
       return;
     }
-    const Dom = rout.func();
+    // console.log(root.children);
 
-    if (CurrentDom) {
-      updateElement(root.children[0], CurrentDom, Dom);
-    } else {
-      root.replaceChildren(CreateElement(rout.func()));
-    }
+    const Dom = rout.func();
     replacestyle(rout.styles);
+
+    updateElement(root.children[0], CurrentDom, Dom);
     CurrentDom = Dom;
   }
 
@@ -171,7 +168,8 @@ export const DOM = (function () {
         }
       } else {
         if (key === "ref") {
-          value(element);
+          if (typeof value === "function") value(element);
+          else value.current = element;
         } else {
           element.setAttribute(key, value);
         }
@@ -180,8 +178,14 @@ export const DOM = (function () {
   }
 
   function updateElement(realElement, oldVDom, newVDom) {
+    id++;
+    //
+    if (!oldVDom || oldVDom.tag !== newVDom.tag) {      
+      const newElement = DOM.CreateElement(realElement, newVDom);
+      realElement?.parentNode?.replaceChild(newElement, realElement);
+      return;
+    }
     updateAttributes(realElement, oldVDom.props, newVDom.props);
-
     updateChildren(realElement, oldVDom.childeren, newVDom.childeren);
   }
 
@@ -241,7 +245,7 @@ export const DOM = (function () {
             }
             updateElement(realChild, oldEntry.vdom, newChild);
           } else {
-            const newElement = CreateElement(newChild);
+            const newElement = CreateElement(element, newChild);
             if (realChild) {
               element.insertBefore(newElement, realChild);
             } else {
@@ -259,11 +263,11 @@ export const DOM = (function () {
             ) {
               updateElement(realChild, oldChild, newChild);
             } else {
-              const newElement = CreateElement(newChild);
+              const newElement = CreateElement(element, newChild);
               element.replaceChild(newElement, realChild);
             }
           } else {
-            const newElement = CreateElement(newChild);
+            const newElement = CreateElement(element, newChild);
             if (realChild) {
               element.replaceChild(newElement, realChild);
             } else {
@@ -278,5 +282,5 @@ export const DOM = (function () {
     }
   }
 
-  return { useStates, render, Jsx, CreateElement };
+  return { useStates, render, Jsx, CreateElement, updateElement };
 })();
