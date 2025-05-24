@@ -494,11 +494,11 @@ function Header() {
         placeholder: "What needs to be done?",
         onkeydown: (e) => {
           if (e.code === "Enter") {
-            if (e.target.value == "") {
+            if (e.target.value.trim().length <= 1) {
               return
             }
-            SetNewTodoList(e.target.value, false);
-
+            SetNewTodoList(e.target.value.trim(), false);
+            e.target.value = ""
           }
         },
       }),
