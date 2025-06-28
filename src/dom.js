@@ -103,8 +103,7 @@ export const DOM = (function () {
       CurrentDom = DOm;
       return;
     }
-    // console.log(root.children);
-
+    
     const Dom = rout.func();
     replacestyle(rout.styles);
 
@@ -136,22 +135,24 @@ export const DOM = (function () {
     }
   }
 
-  function updateAttributes(element, oldAttrs, newAttrs) {
-    oldAttrs = oldAttrs || {};
-    newAttrs = newAttrs || {};
+  function updateAttributes(element, oldprops, newprops) {
 
-    Object.entries(oldAttrs).forEach(([key, _]) => {
-      if (key.startsWith("on")) {
-        const eventName = key.toLowerCase();
-        if (!newAttrs[eventName]) {
-          element[eventName] = null;
+    oldprops = oldprops || {};
+    newprops = newprops || {};
+
+    Object.entries(oldprops).forEach(([key, _]) => {
+      if (key.startsWith('on')) {
+        const eventName = key.toLowerCase()
+        if (!newprops[eventName]) {
+          element[eventName] = null
         }
-      } else if (!(key in newAttrs)) {
+      } else if (!(key in newprops)) {
         element.removeAttribute(key);
       }
     });
-    Object.entries(newAttrs).forEach(([key, value]) => {
-      if (oldAttrs[key] === value) return;
+    Object.entries(newprops).forEach(([key, value]) => {
+
+      if (oldprops[key] === value) return;
 
       if (key.startsWith("on") && typeof value === "function") {
         const eventName = key.toLowerCase();
@@ -178,9 +179,7 @@ export const DOM = (function () {
   }
 
   function updateElement(realElement, oldVDom, newVDom) {
-    id++;
-    //
-    if (!oldVDom || oldVDom.tag !== newVDom.tag) {      
+    if (!oldVDom || oldVDom.tag !== newVDom.tag) {
       const newElement = DOM.CreateElement(realElement, newVDom);
       realElement?.parentNode?.replaceChild(newElement, realElement);
       return;
@@ -195,20 +194,15 @@ export const DOM = (function () {
 
     const oldKeys = new Map();
     oldChildren.forEach((child, index) => {
-      if (typeof child !== "string" && child.props?.key) {
-        oldKeys.set(child.props.key, {
-          vdom: child,
-          element: element.childNodes[index],
-        });
+      if (typeof child !== 'string' && child?.props?.key) {
+        oldKeys.set(child.props.key, { vdom: child, element: element.childNodes[index] });
       }
     });
 
     // Remove old children whose keys are not in newChildren
-    const newKeys = new Set(
-      newChildren
-        .filter((c) => typeof c !== "string" && c?.props?.key)
-        .map((c) => c.attrs.key)
-    );
+    //console.log("goooo", newChildren);
+
+    const newKeys = new Set(newChildren.filter(c => typeof c !== 'string' && c?.props?.key).map(c => c.props.key));
     oldKeys.forEach((value, key) => {
       if (!newKeys.has(key)) {
         element.removeChild(value.element);
@@ -234,7 +228,7 @@ export const DOM = (function () {
           }
         }
       } else {
-        const newKey = newChild.props?.key;
+        const newKey = newChild?.props?.key;
         if (newKey) {
           const oldEntry = oldKeys.get(newKey);
           if (oldEntry) {
@@ -256,11 +250,7 @@ export const DOM = (function () {
           // Handle non-keyed elements
           if (realChild && realChild.nodeType === Node.ELEMENT_NODE) {
             const oldChild = oldChildren[i];
-            if (
-              typeof oldChild === "object" &&
-              oldChild.tag === newChild.tag &&
-              !oldChild.props?.key
-            ) {
+            if (typeof oldChild === 'object' && oldChild.tag === newChild.tag && !oldChild.props?.key) {
               updateElement(realChild, oldChild, newChild);
             } else {
               const newElement = CreateElement(element, newChild);
